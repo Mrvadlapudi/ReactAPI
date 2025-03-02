@@ -10,7 +10,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
         policy.WithOrigins(
-            "http://localhost:3000", 
+            "http://localhost:3000",
             "https://your-deployed-react-app.com") // Change this to your actual deployed frontend URL
         .AllowAnyHeader()
         .AllowAnyMethod());
@@ -41,4 +41,3 @@ var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Urls.Add($"http://0.0.0.0:{port}");
 
 app.Run();
-
