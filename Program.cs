@@ -11,7 +11,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactApp", policy =>
         policy.WithOrigins(
             "http://localhost:3000",
-            "https://your-deployed-react-app.com") // Change this to your actual deployed frontend URL
+            "https://your-deployed-react-app.com")
         .AllowAnyHeader()
         .AllowAnyMethod());
 });
@@ -25,15 +25,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Enable CORS (Place before routing)
+// Enable CORS
 app.UseCors("AllowReactApp");
 
 app.UseRouting();
 app.UseHttpsRedirection();
-// app.UseAuthorization();
+// app.UseAuthorization(); // Keep commented for testing
 app.MapControllers();
 
 // Health check endpoint
 app.MapGet("/", () => "API is running!");
 
+// Start app
 app.Run();
