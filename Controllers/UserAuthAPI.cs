@@ -24,7 +24,6 @@ namespace ReactAPI.Controllers
             _connectionString = builder.ConnectionString;
         }
 
-        // POST: api/user
         [HttpPost]
         public IActionResult CreateUser([FromBody] User user)
         {
@@ -33,20 +32,31 @@ namespace ReactAPI.Controllers
                 return BadRequest("Invalid user data.");
             }
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            try
             {
-                using (SqlCommand cmd = new SqlCommand("InsertUser", conn))
+                using (SqlConnection conn = new SqlConnection(_connectionString))
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@Username", user.Username);
-                    cmd.Parameters.AddWithValue("@Email", user.Email);
+                    using (SqlCommand cmd = new SqlCommand("InsertUser", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@Username", user.Username);
+                        cmd.Parameters.AddWithValue("@Email", user.Email);
 
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
                 }
-            }
 
-            return Ok(new { message = "User registered successfully!" });
+                return Ok(new { message = "User registered successfully!" });
+            }
+            catch (SqlException ex)
+            {
+                return StatusCode(500, $"SQL Error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Server Error: {ex.Message}");
+            }
         }
     }
 }
