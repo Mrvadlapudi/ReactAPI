@@ -36,8 +36,4 @@ app.MapControllers();
 // Health check endpoint
 app.MapGet("/", () => "API is running!");
 
-// Explicit URL binding for cloud deployment
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-app.Urls.Add($"http://0.0.0.0:{port}");
-
 app.Run();
