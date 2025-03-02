@@ -30,7 +30,7 @@ app.UseCors("AllowReactApp");
 
 app.UseRouting();
 app.UseHttpsRedirection();
-app.UseAuthorization();
+// app.UseAuthorization();
 app.MapControllers();
 
 // Health check endpoint
