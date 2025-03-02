@@ -7,31 +7,25 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
-        policy => policy.WithOrigins("http://localhost:3000") // Change this to your deployed React URL if needed
+        policy => policy.WithOrigins("http://localhost:3000")
                         .AllowAnyHeader()
                         .AllowAnyMethod());
 });
 
 var app = builder.Build();
 
-// Enable Swagger for API documentation
+// Enable Swagger in Production
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseRouting();
-
-// Apply CORS policy
-app.UseCors("AllowReactApp");
-
 app.UseHttpsRedirection();
 app.UseAuthorization();
+app.MapControllers();
+app.MapGet("/", () => "API is running!");
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-    endpoints.MapGet("/", () => "API is running!");
-});
-
-// 🔥 Use Railway's assigned port dynamically
+// 🔥 **Use explicit URL binding**
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-app.Run($"http://0.0.0.0:{port}");
+app.Urls.Add($"http://0.0.0.0:{port}");
+
+app.Run();
